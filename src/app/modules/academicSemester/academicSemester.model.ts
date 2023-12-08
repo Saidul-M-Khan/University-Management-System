@@ -5,6 +5,8 @@ import {
   Months,
 } from './academicSemester.constant';
 import { TAcademicSemester } from './academicSemester.interface';
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 
 // Partial<TAcademicSemester>
 
@@ -46,7 +48,10 @@ academicSemesterSchema.pre('save', async function(next){
     year: this.year,
   })
   if(isSemesterExists){
-    throw new Error('Semester is already exists!')
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Semester is already exists!',
+    )
   }
   next()
 })

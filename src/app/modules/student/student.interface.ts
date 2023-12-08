@@ -28,7 +28,7 @@ export type TStudent = {
   password: string;
   name: TUserName;
   gender: 'male' | 'female' | 'other';
-  dateOfBirth?: string;
+  dateOfBirth?: Date;
   email: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -38,9 +38,9 @@ export type TStudent = {
   guardian: TGuardian;
   localGuardian: TLocalGuardian;
   profileImg?: string;
-  admissionSemester: Types.ObjectId
-  // isActive: 'active' | 'blocked';
-  // isDeleted: boolean;
+  isDeleted: boolean;
+  admissionSemester: Types.ObjectId;
+  academicDepartment: Types.ObjectId;
 };
 
 //for creating static
