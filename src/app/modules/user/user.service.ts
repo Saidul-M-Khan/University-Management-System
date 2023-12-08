@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import { startSession } from 'mongoose';
 import config from '../../config';
 import { AcademicSemester } from '../academicSemester/academicSemester.model';
 import { TStudent } from '../student/student.interface';
@@ -25,7 +25,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.admissionSemester,
   );
 
-  const session = await mongoose.startSession();
+  const session = await startSession();
   try {
     await session.startTransaction()
 

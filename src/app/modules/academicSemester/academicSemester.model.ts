@@ -8,8 +8,6 @@ import { TAcademicSemester } from './academicSemester.interface';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 
-// Partial<TAcademicSemester>
-
 const academicSemesterSchema = new Schema<TAcademicSemester>(
   {
     name: {
