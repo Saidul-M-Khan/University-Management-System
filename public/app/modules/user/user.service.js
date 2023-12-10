@@ -56,6 +56,7 @@ const createStudentIntoDB = (password, payload) => __awaiter(void 0, void 0, voi
     catch (err) {
         yield session.abortTransaction();
         yield session.endSession();
+        throw new AppError_1.default(http_status_1.default.BAD_REQUEST, err); // throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create student');
     }
 });
 exports.UserServices = {

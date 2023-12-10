@@ -149,7 +149,8 @@ const studentSchema = new mongoose_1.Schema({
 });
 // virtual
 studentSchema.virtual('fullName').get(function () {
-    return this.name.firstName + this.name.middleName + this.name.lastName;
+    var _a, _b, _c;
+    return ((_a = this === null || this === void 0 ? void 0 : this.name) === null || _a === void 0 ? void 0 : _a.firstName) + " " + ((_b = this === null || this === void 0 ? void 0 : this.name) === null || _b === void 0 ? void 0 : _b.middleName) + " " + ((_c = this === null || this === void 0 ? void 0 : this.name) === null || _c === void 0 ? void 0 : _c.lastName);
 });
 // Query Middleware
 studentSchema.pre('find', function (next) {

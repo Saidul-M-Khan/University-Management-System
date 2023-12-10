@@ -2,12 +2,12 @@
 import { ErrorRequestHandler } from 'express';
 import { ZodError } from 'zod';
 import config from '../config';
-import { TErrorSources } from '../interface/error';
-import handleZodError from '../errors/handleZodError';
-import handleMongooseValidationError from '../errors/handleMongooseValidationError';
+import AppError from '../errors/AppError';
 import handleMongooseCastError from '../errors/handleMongooseCastError';
 import handleMongooseDuplicateError from '../errors/handleMongooseDuplicateError';
-import AppError from '../errors/AppError';
+import handleMongooseValidationError from '../errors/handleMongooseValidationError';
+import handleZodError from '../errors/handleZodError';
+import { TErrorSources } from '../interface/error';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
@@ -27,34 +27,38 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if(err?.name === 'ValidationError'){
+  } else if (err?.name === 'ValidationError') {
     const simplifiedError = handleMongooseValidationError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if(err?.name === 'CastError'){
+  } else if (err?.name === 'CastError') {
     const simplifiedError = handleMongooseCastError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if(err?.code === 11000){
+  } else if (err?.code === 11000) {
     const simplifiedError = handleMongooseDuplicateError(err);
     statusCode = simplifiedError?.statusCode;
     message = simplifiedError?.message;
     errorSources = simplifiedError?.errorSources;
-  } else if(err instanceof AppError){
+  } else if (err instanceof AppError) {
     statusCode = err?.statusCode;
     message = err?.message;
-    errorSources = [{
-      path: '',
-      message: err?.message,
-    }];
-  } else if(err instanceof Error){
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
+  } else if (err instanceof Error) {
     message = err?.message;
-    errorSources = [{
-      path: '',
-      message: err?.message,
-    }];
+    errorSources = [
+      {
+        path: '',
+        message: err?.message,
+      },
+    ];
   }
 
   return res.status(statusCode).json({
