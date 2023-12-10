@@ -1,8 +1,6 @@
 
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
-import { StudentRoutes } from './app/modules/student/student.route';
-import { UserRoutes } from './app/modules/user/user.route';
 import globalErrorHandler from './app/middleware/globalErrorHandler';
 import notFound from './app/middleware/notFound';
 import router from './app/routes';
@@ -16,7 +14,10 @@ app.use(cors());
 // application routes
 app.use('/api/v1/', router);
 
-const test = (req: Request, res: Response) => {
+
+
+const test = async (req: Request, res: Response) => {
+  // Promise.reject()
   res.send('Server is running!');
 };
 
