@@ -229,10 +229,10 @@ const deleteOfferedCourseFromDB = async (id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Offered Course not found');
   }
 
-  const semesterRegistation = isOfferedCourseExists.semesterRegistration;
+  const semesterRegistration = isOfferedCourseExists.semesterRegistration;
 
   const semesterRegistrationStatus =
-    await SemesterRegistration.findById(semesterRegistation).select('status');
+    await SemesterRegistration.findById(semesterRegistration).select('status');
 
   if (semesterRegistrationStatus?.status !== 'UPCOMING') {
     throw new AppError(
