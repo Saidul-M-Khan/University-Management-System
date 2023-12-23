@@ -34,7 +34,7 @@ const updateFaculty = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is updated succesfully',
+    message: 'Faculty is updated successfully',
     data: result,
   });
 });
@@ -46,7 +46,7 @@ const deleteFaculty = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Faculty is deleted succesfully',
+    message: 'Faculty is deleted successfully',
     data: result,
   });
 });

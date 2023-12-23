@@ -3,10 +3,10 @@ import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 import { AcademicDepartment } from '../academicDepartment/academicDepartment.model';
 import { AcademicFaculty } from '../academicFaculty/academicFaculty.model';
-import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
-import { TOfferedCourse } from './offeredCourse.interface';
 import { Course } from '../course/course.model';
 import { Faculty } from '../faculty/faculty.model';
+import { SemesterRegistration } from '../semesterRegistration/semesterRegistration.model';
+import { TOfferedCourse } from './offeredCourse.interface';
 import { OfferedCourse } from './offeredCourse.model';
 import { hasTimeConflict } from './offeredCourse.utils';
 
@@ -49,15 +49,13 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 
   const academicSemester = isSemesterRegistrationExits.academicSemester;
 
-  const isAcademicFacultyExits =
-    await AcademicFaculty.findById(academicFaculty);
+  const isAcademicFacultyExits = await AcademicFaculty.findById(academicFaculty);
 
   if (!isAcademicFacultyExits) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic Faculty not found !');
   }
 
-  const isAcademicDepartmentExits =
-    await AcademicDepartment.findById(academicDepartment);
+  const isAcademicDepartmentExits = await AcademicDepartment.findById(academicDepartment);
 
   if (!isAcademicDepartmentExits) {
     throw new AppError(httpStatus.NOT_FOUND, 'Academic Department not found !');
@@ -132,7 +130,19 @@ const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
 };
 
 const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
-  const offeredCourseQuery = new QueryBuilder(OfferedCourse.find(), query)
+  const offeredCourseQuery = new QueryBuilder(
+    OfferedCourse.find(),
+      // .populate({
+      //   path: 'semesterRegistration',
+      //   populate: { path: 'academicSemester' },
+      // })
+      // .populate('academicSemester')
+      // .populate('academicFaculty')
+      // .populate('academicDepartment')
+      // .populate('course')
+      // .populate('faculty'),
+    query,
+  )
     .filter()
     .sort()
     .paginate()
@@ -143,7 +153,15 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
-  const offeredCourse = await OfferedCourse.findById(id);
+  const offeredCourse = await OfferedCourse.findById(id).populate({
+    path: 'semesterRegistration',
+    populate: { path: 'academicSemester' },
+  })
+  .populate('academicSemester')
+  .populate('academicFaculty')
+  .populate('academicDepartment')
+  .populate('course')
+  .populate('faculty');
 
   if (!offeredCourse) {
     throw new AppError(404, 'Offered Course not found');

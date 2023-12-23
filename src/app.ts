@@ -18,7 +18,11 @@ app.use('/api/v1/', router);
 
 const test = async (req: Request, res: Response) => {
   // Promise.reject()
-  res.send('Server is running!');
+  res.json({
+    success: true,
+    message: "Welcome to University Management System REST API",
+    error: ""
+  });
 };
 
 app.get('/', test);

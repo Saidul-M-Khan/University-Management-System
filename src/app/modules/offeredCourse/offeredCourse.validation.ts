@@ -24,16 +24,11 @@ const createOfferedCourseValidationSchema = z.object({
       days: z.array(z.enum([...Days] as [string, ...string[]])),
       startTime: timeStringSchema, // HH: MM   00-23: 00-59
       endTime: timeStringSchema,
-    })
-    .refine(
+    }).refine(
       (body) => {
-        // startTime : 10:30  => 1970-01-01T10:30
-        //endTime : 12:30  =>  1970-01-01T12:30
-
-        const start = new Date(`1970-01-01T${body.startTime}:00`);
-        const end = new Date(`1970-01-01T${body.endTime}:00`);
-
-        return end > start;
+        const start = new Date(`1970-01-01T${body.startTime}:00`); // startTime : 10:30  => 1970-01-01T10:30
+        const end = new Date(`1970-01-01T${body.endTime}:00`); //endTime : 12:30  =>  1970-01-01T12:30
+        return start.getTime() < end.getTime();
       },
       {
         message: 'Start time should be before End time !  ',
