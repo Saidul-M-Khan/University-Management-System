@@ -1,6 +1,4 @@
-import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
-import config from '../../config';
 import {
   StudentModel,
   TGuardian,
@@ -57,7 +55,7 @@ const guardianSchema = new Schema<TGuardian>({
   },
 });
 
-const localGuradianSchema = new Schema<TLocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: [true, 'Name is required'],
@@ -85,11 +83,6 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       unique: true,
       ref: 'User',
     },
-    // password: {
-    //   type: String,
-    //   required: [true, 'Password is required'],
-    //   maxlength: [20, 'Password can not be more than 20 characters'],
-    // },
     name: {
       type: userNameSchema,
       required: [true, 'Name is required'],
@@ -113,7 +106,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Emergency contact number is required'],
     },
-    bloogGroup: {
+    bloodGroup: {
       type: String,
       enum: {
         values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
@@ -133,22 +126,22 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       required: [true, 'Guardian information is required'],
     },
     localGuardian: {
-      type: localGuradianSchema,
+      type: localGuardianSchema,
       required: [true, 'Local guardian information is required'],
     },
     profileImg: { type: String },
-    // isActive: {
-    //   type: String,
-    //   enum: {
-    //     values: ['active', 'blocked'],
-    //     message: '{VALUE} is not a valid status',
-    //   },
-    //   default: 'active',
-    // },
-    // isDeleted: {
-    //   type: Boolean,
-    //   default: false,
-    // },
+    isDeleted: {
+      type: Boolean,
+      default: false
+    },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester'
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment'
+    },
   },
   {
     toJSON: {
@@ -158,28 +151,9 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 );
 
 // virtual
-// studentSchema.virtual('fullName').get(function () {
-//   return this.name.firstName + this.name.middleName + this.name.lastName;
-// });
-
-// pre save middleware/ hook : will work on create()  save()
-// studentSchema.pre('save', async function (next) {
-//   // console.log(this, 'pre hook : we will save  data');
-//   // eslint-disable-next-line @typescript-eslint/no-this-alias
-//   const user = this; // doc
-//   // hashing password and save into DB
-//   user.password = await bcrypt.hash(
-//     user.password,
-//     Number(config.bcrypt_salt_rounds),
-//   );
-//   next();
-// });
-
-// post save middleware / hook
-// studentSchema.post('save', function (doc, next) {
-//   doc.password = '';
-//   next();
-// });
+studentSchema.virtual('fullName').get(function () {
+  return this?.name?.firstName + " " + this?.name?.middleName + " " + this?.name?.lastName;
+});
 
 // Query Middleware
 studentSchema.pre('find', function (next) {
@@ -192,8 +166,6 @@ studentSchema.pre('findOne', function (next) {
   next();
 });
 
-// [ {$match: { isDeleted : {  $ne: : true}}}   ,{ '$match': { id: '123456' } } ]
-
 studentSchema.pre('aggregate', function (next) {
   this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } });
   next();
@@ -204,12 +176,5 @@ studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
-
-//creating a custom instance method
-// studentSchema.methods.isUserExists = async function (id: string) {
-//   const existingUser = await Student.findOne({ id });
-
-//   return existingUser;
-// };
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);
