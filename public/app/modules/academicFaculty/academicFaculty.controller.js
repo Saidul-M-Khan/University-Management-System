@@ -41,7 +41,7 @@ const getSingleAcademicFaculty = (0, catchAsync_1.default)((req, res) => __await
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Academic faculty is retrieved succesfully',
+        message: 'Academic faculty is retrieved successfully',
         data: result,
     });
 }));
@@ -51,7 +51,7 @@ const updateAcademicFaculty = (0, catchAsync_1.default)((req, res) => __awaiter(
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
-        message: 'Academic faculty is updated succesfully',
+        message: 'Academic faculty is updated successfully',
         data: result,
     });
 }));

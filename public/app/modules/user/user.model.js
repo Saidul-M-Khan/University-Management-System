@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
+/* eslint-disable @typescript-eslint/no-this-alias */
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const mongoose_1 = require("mongoose");
 const config_1 = __importDefault(require("../../config"));
@@ -24,27 +25,31 @@ const userSchema = new mongoose_1.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select: 0,
     },
     needsPasswordChange: {
         type: Boolean,
-        default: true
+        default: true,
+    },
+    passwordChangedAt: {
+        type: Date,
     },
     role: {
         type: String,
-        enum: ['admin', 'student', 'faculty']
+        enum: ['student', 'faculty', 'admin'],
     },
     status: {
         type: String,
         enum: ['in-progress', 'blocked'],
-        default: 'in-progress'
+        default: 'in-progress',
     },
     isDeleted: {
         type: Boolean,
-        default: false
-    }
+        default: false,
+    },
 }, {
-    timestamps: true
+    timestamps: true,
 });
 userSchema.pre('save', function (next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -60,4 +65,18 @@ userSchema.post('save', function (doc, next) {
     doc.password = '';
     next();
 });
+userSchema.statics.isUserExistsByCustomId = function (id) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield exports.User.findOne({ id }).select('+password');
+    });
+};
+userSchema.statics.isPasswordMatched = function (plainTextPassword, hashedPassword) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return yield bcrypt_1.default.compare(plainTextPassword, hashedPassword);
+    });
+};
+userSchema.statics.isJWTIssuedBeforePasswordChanged = function (passwordChangedTimestamp, jwtIssuedTimestamp) {
+    const passwordChangedTime = new Date(passwordChangedTimestamp).getTime() / 1000;
+    return passwordChangedTime > jwtIssuedTimestamp;
+};
 exports.User = (0, mongoose_1.model)('User', userSchema);

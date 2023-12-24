@@ -1,11 +1,11 @@
 import express from 'express';
-import validateRequest from '../../middleware/validateRequest';
-import { createAdminValidationSchema } from '../admin/admin.validation';
-import { createFacultyValidationSchema } from '../faculty/faculty.validation';
-import { createStudentValidationSchema } from '../student/student.validation';
+import { createStudentValidationSchema } from './../student/student.validation';
+import { USER_ROLE } from './user.constant';
 import { UserControllers } from './user.controller';
 import auth from '../../middleware/auth';
-import { USER_ROLE } from './user.constant';
+import validateRequest from '../../middleware/validateRequest';
+import { createFacultyValidationSchema } from '../faculty/faculty.validation';
+import { createAdminValidationSchema } from '../admin/admin.validation';
 
 const router = express.Router();
 
@@ -25,6 +25,7 @@ router.post(
 
 router.post(
   '/create-admin',
+  // auth(USER_ROLE.admin),
   validateRequest(createAdminValidationSchema),
   UserControllers.createAdmin,
 );

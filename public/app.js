@@ -25,7 +25,11 @@ app.use((0, cors_1.default)());
 app.use('/api/v1/', routes_1.default);
 const test = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // Promise.reject()
-    res.send('Server is running!');
+    res.json({
+        success: true,
+        message: "Welcome to University Management System REST API",
+        error: ""
+    });
 });
 app.get('/', test);
 app.use(globalErrorHandler_1.default);

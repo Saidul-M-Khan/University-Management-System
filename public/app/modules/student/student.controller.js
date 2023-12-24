@@ -27,8 +27,8 @@ const getAllStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     });
 }));
 const getSingleStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { studentId } = req.params;
-    const result = yield student_service_1.StudentServices.getSingleStudentFromDB(studentId);
+    const { id } = req.params;
+    const result = yield student_service_1.StudentServices.getSingleStudentFromDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -37,8 +37,8 @@ const getSingleStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 
     });
 }));
 const deleteStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { studentId } = req.params;
-    const result = yield student_service_1.StudentServices.deleteStudentFromDB(studentId);
+    const { id } = req.params;
+    const result = yield student_service_1.StudentServices.deleteStudentFromDB(id);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,
@@ -47,9 +47,9 @@ const deleteStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
     });
 }));
 const updateStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { studentId } = req.params;
+    const { id } = req.params;
     const { student } = req.body;
-    const result = yield student_service_1.StudentServices.updateStudentFromDB(studentId, student);
+    const result = yield student_service_1.StudentServices.updateStudentFromDB(id, student);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_1.default.OK,
         success: true,

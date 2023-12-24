@@ -8,7 +8,7 @@ const userValidationSchema = z.object({
     })
     .max(20, { message: 'Password cannot be more than 20 characters' })
     .optional(),
-  status: z.enum(['in-progress', 'blocked']).default('in-progress'),
+  // status: z.enum(['in-progress', 'blocked']).default('in-progress'),
 });
 
 export const UserValidation = { userValidationSchema };
